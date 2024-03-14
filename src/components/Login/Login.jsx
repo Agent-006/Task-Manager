@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -14,12 +14,45 @@ import { LockIcon } from "../ui/LockIcon.jsx";
 import { useForm } from "react-hook-form";
 import Input from "../Input/Input.jsx";
 
+import { useDispatch } from "react-redux";
+import { login as authLogin } from "../../store/authSlice.js";
+
 export default function Login() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { register, handleSubmit } = useForm();
 
-  const userLogin = () => {
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
+
+  const userLogin = async (formData) => {
     //TODO: login functionality
+    setError("");
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const responseData = await response.json();
+      const userData = responseData.data.user;
+
+      if (userData) {
+        dispatch(authLogin({ userData }));
+      }
+
+      // Extracting accessToken and refreshToken from userData
+
+      // const { accessToken, refreshToken } = userData;
+
+      // document.cookie = `accessToken=${accessToken}; path=/; secure=true;`;
+      // document.cookie = `refreshToken=${refreshToken}; path=/; secure=true;`;
+    } catch (error) {
+      console.error("Error during login: ", error);
+      setError(error.message);
+    }
   };
 
   return (
@@ -33,14 +66,28 @@ export default function Login() {
         onOpenChange={onOpenChange}
         placement="top-center"
       >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                <form onSubmit={handleSubmit(userLogin)}>
-                  <div className="my-3">
-                    <MailIcon />
+        <form onSubmit={handleSubmit(userLogin)}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Log in
+                </ModalHeader>
+                <ModalBody>
+                  <div className="my-1">
+                    <Input
+                      type="text"
+                      placeholder="Enter your username"
+                      {...register("username", {
+                        required: true,
+                      })}
+                      className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
+                    />
+                  </div>
+                  <div className="my-1">
+                    <div className="my-1">
+                      <MailIcon />
+                    </div>
                     <Input
                       type="email"
                       placeholder="Enter your email"
@@ -50,8 +97,10 @@ export default function Login() {
                       className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
                     />
                   </div>
-                  <div className="my-3">
-                    <LockIcon />
+                  <div className="my-1">
+                    <div className="my-1">
+                      <LockIcon />
+                    </div>
                     <Input
                       type="password"
                       placeholder="Enter your password"
@@ -61,29 +110,29 @@ export default function Login() {
                       className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
                     />
                   </div>
-                </form>
-                <div className="flex py-2 px-1 justify-between">
-                  <Link color="primary" href="#" size="sm">
-                    Forgot password ?
-                  </Link>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="flat"
-                  onPress={onClose}
-                >
-                  Sign in
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+                  <div className="flex py-2 px-1 justify-between">
+                    <Link color="primary" href="#" size="sm">
+                      Forgot password ?
+                    </Link>
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="flat" onPress={onClose}>
+                    Close
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="flat"
+                    onPress={onClose}
+                  >
+                    Sign in
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </form>
       </Modal>
     </>
   );

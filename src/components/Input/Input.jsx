@@ -3,7 +3,7 @@ import React, { forwardRef, useId } from "react";
 function Input({ label, type = "text", className = "", ...props }, ref) {
   const id = useId();
   return (
-    <div className="w-full flex flex-col my-3">
+    <div className="w-full flex flex-col">
       {label && (
         <label htmlFor={id} className="text-sm my-1">
           {label}

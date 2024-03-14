@@ -7,30 +7,65 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Input,
 } from "@nextui-org/react";
 import { MailIcon } from "../ui/MailIcon.jsx";
 import { LockIcon } from "../ui/LockIcon.jsx";
+import { useForm } from "react-hook-form";
+import Input from "../Input/Input.jsx";
 
 export default function SignUp() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const userRegister = () => {
+  const { register, handleSubmit } = useForm();
+
+  const userRegister = async (formData) => {
     //TODO: register functionality
+    try {
+      const form = new FormData();
+
+      form.append("fullName", formData.fullName);
+      form.append("username", formData.username);
+      form.append("email", formData.email);
+      form.append("password", formData.password);
+      form.append("avatar", formData.avatar[0]);
+
+      const response = await fetch(
+        "http://localhost:8000/api/v1/users/register",
+        {
+          method: "POST",
+          body: form,
+        }
+      );
+
+      if (response.ok) {
+        console.log("Registered user successfully");
+      } else {
+        console.error("Register failed");
+      }
+    } catch (error) {
+      console.error("Error during login: ", error);
+    }
   };
 
   return (
     <>
-      <Button onPress={onOpen} color="primary">
-        Open Modal
+      <Button onPress={onOpen} color="primary" variant="flat">
+        Register
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                <form onSubmit={handleSubmit(userRegister)}>
+      <Modal
+        className="bg-zinc-800 text-zinc-200"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+      >
+        <form onSubmit={handleSubmit(userRegister)}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  Register
+                </ModalHeader>
+                <ModalBody>
                   <div className="flex flex-col gap-4">
                     <Input
                       type="text"
@@ -68,20 +103,34 @@ export default function SignUp() {
                       })}
                       className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
                     />
+                    <Input
+                      type="file"
+                      label="Avatar"
+                      accept="image/png, image/jpg, image/jpeg, image/gif"
+                      {...register("avatar", {
+                        required: true,
+                      })}
+                      className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
+                    />
                   </div>
-                </form>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Sign in
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="flat" onPress={onClose}>
+                    Close
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="flat"
+                    onPress={onClose}
+                  >
+                    Register
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </form>
       </Modal>
     </>
   );

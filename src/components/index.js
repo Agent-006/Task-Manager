@@ -6,13 +6,4 @@ import SignUp from "./SignUp/SignUp";
 
 import Input from "./Input/Input";
 
-export { 
-    Nav, 
-    AddTask,
-    Cards,
-    Login,
-    SignUp,
-
-    Input,
-};
-
+export { Nav, AddTask, Cards, Login, SignUp, Input };
