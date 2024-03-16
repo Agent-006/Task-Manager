@@ -12,18 +12,20 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      const response = await fetch("http://localhost:8000/api/v1/tasks/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData?.accessToken}`,
-        },
-      });
+    if (isLoggedIn) {
+      (async () => {
+        const response = await fetch("http://localhost:8000/api/v1/tasks/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData?.accessToken}`,
+          },
+        });
 
-      const responseData = await response.json();
-      setTasks(responseData.data);
-    })();
+        const responseData = await response.json();
+        setTasks(responseData.data);
+      })();
+    }
   }, [userData, isUpdatedTask]);
 
   return (
