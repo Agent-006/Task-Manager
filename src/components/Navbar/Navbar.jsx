@@ -13,20 +13,13 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  Button,
 } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logout as authLogout } from "../../store/authSlice.js";
-import TextArea from "../TextArea/TextArea.jsx";
-import Input from "../Input/Input.jsx";
-import { useForm } from "react-hook-form";
 
 function Nav() {
   const dispatch = useDispatch();
-
-  const { register, handleSubmit } = useForm();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [backdrop, setBackdrop] = React.useState("opaque");
@@ -67,10 +60,6 @@ function Nav() {
     }
   };
 
-  const editProfile = () => {
-    //TODO: edit profile functionality
-  };
-
   return (
     <Navbar className="bg-transparent">
       <NavbarContent as="div" justify="end">
@@ -105,69 +94,38 @@ function Nav() {
                 >
                   Profile
                   <Modal
-                    className="bg-zinc-800 text-zinc-200"
+                    className="bg-zinc-800/90 text-zinc-200"
                     backdrop={backdrop}
                     isOpen={isOpen}
                     onClose={onClose}
                   >
-                    <form onSubmit={handleSubmit(editProfile)}>
-                      <ModalContent>
-                        {(onClose) => (
-                          <>
-                            <ModalHeader className="flex flex-col gap-1">
-                              Modal Title
-                            </ModalHeader>
-                            <ModalBody>
-                              <Input
-                                type="text"
-                                label="Title"
-                                placeholder="Enter task title"
-                                {...register("title", {
-                                  required: true,
-                                  maxLength: 15,
-                                })}
-                                className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
-                              />
-                              <Input
-                                type="text"
-                                label="Description"
-                                placeholder="Enter a small task description"
-                                {...register("description", {
-                                  required: true,
-                                  maxLength: 30,
-                                })}
-                                className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
-                              />
-                              <TextArea
-                                label="Content"
-                                className="px-2 py-1 rounded-md bg-transparent border-1.5 text-sm font-light outline-none"
-                                placeholder="Enter your task details here"
-                                {...register("content", {
-                                  required: true,
-                                })}
-                              />
-                            </ModalBody>
-                            <ModalFooter>
-                              <Button
-                                color="danger"
-                                variant="light"
-                                onPress={onClose}
-                              >
-                                Cancel
-                              </Button>
-                              <Button
-                                type="submit"
-                                color="primary"
-                                variant="light"
-                                onPress={onClose}
-                              >
-                                Add
-                              </Button>
-                            </ModalFooter>
-                          </>
-                        )}
-                      </ModalContent>
-                    </form>
+                    <ModalContent>
+                      <>
+                        <ModalHeader className="flex flex-col gap-1">
+                          Your Profile
+                        </ModalHeader>
+                        <ModalBody className="flex gap-3 items-center justify-evenly">
+                          <img
+                            className="rounded-full"
+                            height={50}
+                            width={50}
+                            src={userData?.loggedInUser.avatar}
+                            alt="profile"
+                          />
+                          <div className="flex flex-col gap-2 py-10">
+                            <div className="text-zinc-200 font-semibold tracking-wide text-xl">
+                              Name: {userData?.loggedInUser.fullName}
+                            </div>
+                            <div className="text-zinc-200 font-semibold tracking-wide text-xl">
+                              Username: {userData?.loggedInUser.username}
+                            </div>
+                            <div className="text-zinc-200 font-semibold tracking-wide text-xl">
+                              User email: {userData?.loggedInUser.email}
+                            </div>
+                          </div>
+                        </ModalBody>
+                      </>
+                    </ModalContent>
                   </Modal>
                 </DropdownItem>
               </DropdownSection>

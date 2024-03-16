@@ -8,8 +8,6 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import { MailIcon } from "../ui/MailIcon.jsx";
-import { LockIcon } from "../ui/LockIcon.jsx";
 import { useForm } from "react-hook-form";
 import Input from "../Input/Input.jsx";
 
@@ -19,7 +17,6 @@ export default function SignUp() {
   const { register, handleSubmit } = useForm();
 
   const userRegister = async (formData) => {
-    //TODO: register functionality
     try {
       const form = new FormData();
 

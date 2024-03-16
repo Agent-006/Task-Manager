@@ -42,13 +42,6 @@ export default function Login() {
       if (userData) {
         dispatch(authLogin({ userData }));
       }
-
-      // Extracting accessToken and refreshToken from userData
-
-      // const { accessToken, refreshToken } = userData;
-
-      // document.cookie = `accessToken=${accessToken}; path=/; secure=true;`;
-      // document.cookie = `refreshToken=${refreshToken}; path=/; secure=true;`;
     } catch (error) {
       console.error("Error during login: ", error);
       setError(error.message);

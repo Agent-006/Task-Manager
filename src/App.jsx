@@ -37,7 +37,6 @@ function App() {
             <div className="w-full absolute z-20">
               <Nav />
             </div>
-            {/* cut */}
             <div className="w-20 absolute right-14 bottom-12 z-20">
               <AddTask />
             </div>
@@ -59,7 +58,6 @@ function App() {
                 </>
               )}
             </div>
-            {/* cut */}
           </div>
         </div>
       </div>

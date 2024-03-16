@@ -35,7 +35,6 @@ export default function AddTask() {
   const { register, handleSubmit } = useForm();
 
   const addTask = async (formData) => {
-    //TODO: add addTask functionality
     try {
       const { accessToken } = userData;
       const response = await fetch("http://localhost:8000/api/v1/tasks/", {
